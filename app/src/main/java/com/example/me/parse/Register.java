@@ -1,11 +1,12 @@
 package com.example.me.parse;
 
 import android.os.Bundle;
-import android.support.design.widget.TextInputEditText;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 
+import com.cengalabs.flatui.FlatUI;
+import com.cengalabs.flatui.views.FlatButton;
+import com.cengalabs.flatui.views.FlatEditText;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.parse.SignUpCallback;
@@ -14,21 +15,25 @@ public class Register extends CredentialsBaseActivity {
 
     private final static String LOG_TAG = Register.class.getSimpleName();
 
-    private TextInputEditText emailWrapper, passwordWrapper, passwordConfirmWrapper, nameWrapper;
-
+    private FlatEditText emailWrapper, passwordWrapper, passwordConfirmWrapper, nameWrapper, usernameWrapper;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
+
+        FlatUI.initDefaultValues(this);
+        FlatUI.setDefaultTheme(FlatUI.GRASS);
+
 //        initialiseParse();
 
-        emailWrapper = (TextInputEditText) findViewById(R.id.email_register);
-        passwordWrapper = (TextInputEditText) findViewById(R.id.password_register);
-        passwordConfirmWrapper = (TextInputEditText) findViewById(R.id.confirm_password_register);
-        nameWrapper = (TextInputEditText) findViewById(R.id.name_register);
+        emailWrapper = (FlatEditText) findViewById(R.id.email_register);
+        passwordWrapper = (FlatEditText) findViewById(R.id.password_register);
+        passwordConfirmWrapper = (FlatEditText) findViewById(R.id.confirm_password_register);
+        nameWrapper = (FlatEditText) findViewById(R.id.name_register);
+        usernameWrapper = (FlatEditText) findViewById(R.id.username_register);
 
-        Button registerButton = (Button) findViewById(R.id.registerButton);
+        FlatButton registerButton = (FlatButton) findViewById(R.id.registerButton);
         assert registerButton != null;
         registerButton.setOnClickListener(new View.OnClickListener() {
                                               @Override
@@ -46,11 +51,15 @@ public class Register extends CredentialsBaseActivity {
         String email = emailWrapper.getText().toString().trim();
         String password = passwordWrapper.getText().toString();
         String confirmPassword = passwordConfirmWrapper.getText().toString();
+        String username = usernameWrapper.getText().toString();
+
         if (!validateEmail(email))
             emailWrapper.setError("Not a valid email address!");
         else emailWrapper.setError(null);
+
         if (!validatePassword(password))
             passwordWrapper.setError("Password should have at-least 8 characters ");
+
         else if (!confirmPasswords(password, confirmPassword)) {
             passwordWrapper.setError("Passwords don't match");
             passwordConfirmWrapper.setError("Password don't match ");
@@ -58,35 +67,36 @@ public class Register extends CredentialsBaseActivity {
             passwordWrapper.setError(null);
             passwordConfirmWrapper.setError(null);
         }
+
         if (name.length() == 0) nameWrapper.setError("Field can't be left Empty ");
+
         if (validateEmail(email) && validatePassword(password) && confirmPasswords(password, confirmPassword)) {
             emailWrapper.setError(null);
             passwordWrapper.setError(null);
             passwordConfirmWrapper.setError(null);
-            signUp(name, password, email);
+            signUp(name, password, email, username);
         }
 
 
     }
 
-    public void signUp(final String name, final String password, final String email) {
+    public void signUp(final String name, final String password, final String email, final String username) {
         ParseUser user = new ParseUser();
-        user.put("Name", name);
-        user.setUsername(email);
+        user.setUsername(username);
         user.setPassword(password);
         user.setEmail(email);
-        user.put("EmailVerified", false);
+//        user.put("emailVerified", false);
+        user.put("name", name);
         user.signUpInBackground(new SignUpCallback() {
             @Override
             public void done(ParseException e) {
                 if (e == null) {
-                    Log.d(LOG_TAG, "user: " + name + "<" + email + ">" + "registered");
+                    Log.d(LOG_TAG, "user: " + username + "<" + email + ">" + "registered");
                     startPostLoginActivity();
                 }
-                    else Log.e(LOG_TAG, e.getMessage());
+                    else Log.e(LOG_TAG, "SignUpFailed " +  e.getMessage());
                 }
             }
-
             );
         }
     }

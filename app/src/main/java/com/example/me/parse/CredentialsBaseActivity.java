@@ -6,33 +6,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
-import com.parse.Parse;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-/**
- * Created by me on 09-05-2016.
- */
 public class CredentialsBaseActivity extends AppCompatActivity {
 
-    private final static String PARSE_APPLICATION_ID = "TBA";
-    private final static String PARSE_SERVER = "TBA";
-
-    protected static final String EMAIL_PATTERN = "^[a-zA-Z0-9#_~!$&'()*+,;=:.\"(),:;<>@\\[\\]\\\\]+@[a-zA-Z0-9-]+(\\.[a-zA-Z0-9-]+)*$";
-    private Pattern pattern = Pattern.compile(EMAIL_PATTERN);
-    private Matcher matcher;
-
-    protected void initialiseParse() {
-        Parse.initialize(new Parse.Configuration.Builder(this)
-                .applicationId(PARSE_APPLICATION_ID)
-                .server(PARSE_SERVER)
-                .build());
-    }
-
     protected boolean validateEmail(String email) {
-        matcher = pattern.matcher(email);
-        return matcher.matches();
+        return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
 
     protected void hideKeyboard() {
@@ -51,7 +29,7 @@ public class CredentialsBaseActivity extends AppCompatActivity {
         return password.equals(confirmPassword);
     }
 
-    protected void  startPostLoginActivity(){
+    protected void startPostLoginActivity() {
         Intent intent = new Intent(getApplicationContext(), PostLoginActivity.class);
         startActivity(intent);
         finish();

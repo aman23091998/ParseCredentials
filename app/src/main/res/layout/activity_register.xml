@@ -1,102 +1,101 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/register_page"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_gravity="center_vertical"
-    android:gravity="center"
-    android:orientation="vertical">
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:id="@+id/register_page"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:layout_gravity="center_vertical"
+              android:gravity="center"
+              android:orientation="vertical">
 
-    <TextView
+    <com.cengalabs.flatui.views.FlatTextView
         android:id="@+id/register_header"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="sans-serif"
+        android:layout_marginBottom="30dp"
         android:text="@string/register_here_header"
-        android:textSize="30sp" />
+        android:textSize="30sp"
+        app:fl_textColor="fl_main"/>
 
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/wrapper_name_register"
+
+    <com.cengalabs.flatui.views.FlatEditText
+        android:id="@+id/name_register"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingLeft="15dp"
-        android:paddingRight="15dp"
-        android:paddingTop="10dp">
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="10dp"
+        android:fontFamily="helvetica"
+        android:hint="@string/input_name"
+        android:imeOptions="actionNext"
+        android:paddingLeft="10dp"
+        android:singleLine="true"
+        app:fl_fieldStyle="fl_box"
+        />
 
-        <android.support.design.widget.TextInputEditText
-            android:id="@+id/name_register"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fontFamily="helvetica"
-            android:hint="@string/input_name"
-            android:imeOptions="actionNext"
-            android:singleLine="true" />
-    </android.support.design.widget.TextInputLayout>
 
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/wrapper_email_register"
+    <com.cengalabs.flatui.views.FlatEditText
+        android:id="@+id/email_register"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingLeft="15dp"
-        android:paddingRight="15dp"
-        android:paddingTop="10dp">
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="10dp"
+        android:fontFamily="helvetica"
+        android:hint="@string/input_email"
+        android:imeOptions="actionNext"
+        android:paddingLeft="10dp"
+        android:inputType="textWebEmailAddress"
+        android:singleLine="true"
+        app:fl_fieldStyle="fl_box"/>
 
-        <android.support.design.widget.TextInputEditText
-            android:id="@+id/email_register"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fontFamily="helvetica"
-            android:hint="@string/input_email"
-            android:imeOptions="actionNext"
-            android:singleLine="true" />
-    </android.support.design.widget.TextInputLayout>
-
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/wrapper_password_register"
+    <com.cengalabs.flatui.views.FlatEditText
+        android:id="@+id/username_register"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingLeft="15dp"
-        android:paddingRight="15dp"
-        android:paddingTop="10dp">
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="10dp"
+        android:fontFamily="helvetica"
+        android:hint="@string/input_username"
+        android:inputType="text"
+        android:paddingLeft="10dp"
+        app:fl_fieldStyle="fl_box"/>
 
-        <android.support.design.widget.TextInputEditText
-            android:id="@+id/password_register"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fontFamily="helvetica"
-            android:hint="@string/input_password"
-            android:inputType="textPassword" />
-
-    </android.support.design.widget.TextInputLayout>
-
-
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/wrapper_confirm_password_register"
+    <com.cengalabs.flatui.views.FlatEditText
+        android:id="@+id/password_register"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="10dp"
-        android:paddingLeft="15dp"
-        android:paddingRight="15dp"
-        android:paddingTop="10dp">
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="10dp"
+        android:fontFamily="helvetica"
+        android:hint="@string/input_password"
+        android:inputType="textPassword"
+        android:paddingLeft="10dp"
+        app:fl_fieldStyle="fl_box"/>
 
 
-        <android.support.design.widget.TextInputEditText
-            android:id="@+id/confirm_password_register"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fontFamily="helvetica"
-            android:hint="@string/input_confirm_password"
-            android:inputType="textPassword" />
+    <com.cengalabs.flatui.views.FlatEditText
+        android:id="@+id/confirm_password_register"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="10dp"
+        android:fontFamily="helvetica"
+        android:hint="@string/input_confirm_password"
+        android:inputType="textPassword"
+        android:paddingLeft="10dp"
+        app:fl_fieldStyle="fl_box"/>
 
-    </android.support.design.widget.TextInputLayout>
 
-
-    <Button
+    <com.cengalabs.flatui.views.FlatButton
         android:id="@+id/registerButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimary"
+        android:layout_marginTop="10dp"
         android:enabled="true"
         android:padding="5dp"
         android:text="REGISTER"
-        android:textColor="#FFFFFF" />
+        android:textColor="#FFFFFF"/>
 </LinearLayout>

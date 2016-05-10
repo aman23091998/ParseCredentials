@@ -1,15 +1,39 @@
 package com.example.me.parse;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
+import com.parse.Parse;
+
 public class MainActivity extends AppCompatActivity {
 
+    private final static String PARSE_APPLICATION_ID = "uEJ7QPPwHtCLVEFqEeb2Ur5x9YfCpdjxL9yXxIkT";
+    private final static String PARSE_SERVER = "TBA";
+    private final static String PARSE_CLIENT_ID = "wRdsU4hrKXvZcZWiru3ZT6MJllIYzCCXFmq4YN2Q";
+    private static boolean enableParse = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        if (enableParse) {
+            initialiseParse();
+            enableParse = false ;
+        }
 
+
+        Intent intent = new Intent(this, Login.class);
+        startActivity(intent);
+    }
+
+
+    protected void initialiseParse() {
+        Parse.initialize(this, PARSE_APPLICATION_ID, PARSE_CLIENT_ID);
+
+        /*Parse.initialize(new Parse.Configuration.Builder(this)
+                .applicationId(PARSE_APPLICATION_ID)
+                .server(PARSE_SERVER)
+                .build());*/
     }
 }
