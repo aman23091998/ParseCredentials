@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
-import com.cengalabs.flatui.FlatUI;
 import com.cengalabs.flatui.views.FlatButton;
 import com.cengalabs.flatui.views.FlatEditText;
 import com.parse.ParseException;
@@ -16,16 +15,13 @@ public class Register extends CredentialsBaseActivity {
     private final static String LOG_TAG = Register.class.getSimpleName();
 
     private FlatEditText emailWrapper, passwordWrapper, passwordConfirmWrapper, nameWrapper, usernameWrapper;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
 
-        FlatUI.initDefaultValues(this);
-        FlatUI.setDefaultTheme(FlatUI.GRASS);
-
-//        initialiseParse();
 
         emailWrapper = (FlatEditText) findViewById(R.id.email_register);
         passwordWrapper = (FlatEditText) findViewById(R.id.password_register);
@@ -69,8 +65,11 @@ public class Register extends CredentialsBaseActivity {
         }
 
         if (name.length() == 0) nameWrapper.setError("Field can't be left Empty ");
+        if (username.length() == 0) usernameWrapper.setError("Field can't be left Empty ");
 
-        if (validateEmail(email) && validatePassword(password) && confirmPasswords(password, confirmPassword)) {
+
+        if (validateEmail(email) && validatePassword(password) && confirmPasswords(password, confirmPassword) && name.length() > 0 && username.length() > 0) {
+            usernameWrapper.setError(null);
             emailWrapper.setError(null);
             passwordWrapper.setError(null);
             passwordConfirmWrapper.setError(null);
@@ -88,15 +87,24 @@ public class Register extends CredentialsBaseActivity {
 //        user.put("emailVerified", false);
         user.put("name", name);
         user.signUpInBackground(new SignUpCallback() {
-            @Override
-            public void done(ParseException e) {
-                if (e == null) {
-                    Log.d(LOG_TAG, "user: " + username + "<" + email + ">" + "registered");
-                    startPostLoginActivity();
-                }
-                    else Log.e(LOG_TAG, "SignUpFailed " +  e.getMessage());
-                }
-            }
-            );
-        }
+                                    @Override
+                                    public void done(ParseException e) {
+                                        if (e == null) {
+                                            Log.d(LOG_TAG, "user: " + username + "<" + email + ">" + "registered");
+                                            startPostLoginActivity();
+                                        } else {
+                                            Log.e(LOG_TAG, "SignUpFailed " + e.getMessage());
+                                            displayErrorDialog(e.getMessage());
+                                        }
+                                    }
+                                }
+        );
     }
+
+    public void displayErrorDialog(String errorMessage) {
+
+        FlatUIDialog errorDialog = new FlatUIDialog(Register.this, errorMessage);
+        errorDialog.show();
+
+    }
+}

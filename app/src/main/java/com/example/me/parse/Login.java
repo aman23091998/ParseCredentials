@@ -1,14 +1,11 @@
 package com.example.me.parse;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
-import com.cengalabs.flatui.FlatUI;
 import com.cengalabs.flatui.views.FlatEditText;
 import com.cengalabs.flatui.views.FlatTextView;
 import com.parse.FindCallback;
@@ -29,10 +26,6 @@ public class Login extends CredentialsBaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
-        FlatUI.initDefaultValues(this);
-        FlatUI.setDefaultTheme(FlatUI.ORANGE);
-
 
         nameWrapper = (FlatEditText) findViewById(R.id.username);
         passwordWrapper = (FlatEditText) findViewById(R.id.password);
@@ -62,6 +55,7 @@ public class Login extends CredentialsBaseActivity {
 
     public void loginUser() {
         hideKeyboard();
+
         String username = nameWrapper.getText().toString();
         String password = passwordWrapper.getText().toString();
         signIn(username, password);
@@ -72,8 +66,9 @@ public class Login extends CredentialsBaseActivity {
         ParseUser.logInInBackground(username, password, new LogInCallback() {
             @Override
             public void done(ParseUser user, ParseException e) {
+
                 if (user != null && e == null) {
-                    Log.d(LOG_TAG, " Successfully logged in") ;
+                    Log.d(LOG_TAG, " Successfully logged in");
                     startPostLoginActivity();
                 } else {
                     ParseQuery<ParseUser> query = ParseUser.getQuery();
@@ -81,7 +76,8 @@ public class Login extends CredentialsBaseActivity {
                     query.findInBackground(new FindCallback<ParseUser>() {
                         @Override
                         public void done(List<ParseUser> objects, ParseException e) {
-                            if ( !objects.isEmpty() && e == null ){
+                            Log.d(LOG_TAG, "Clicked :|");
+                            if (!objects.isEmpty() && e == null) {
                                 ParseUser temp = objects.get(0);
                                 String usernameFromServer = temp.getUsername();
                                 ParseUser.logInInBackground(usernameFromServer, password, new LogInCallback() {
@@ -91,21 +87,13 @@ public class Login extends CredentialsBaseActivity {
                                             Log.d(LOG_TAG, " Successfully logged in");
                                             startPostLoginActivity();
                                         }
-                                        else {
-                                            Log.d(LOG_TAG, "Error Singing in" + e.getMessage());
-                                            displayErrorDialog(e.getMessage());
-                                        };
                                     }
                                 });
+                            } else {
+                                Log.d(LOG_TAG, "Invalid login parameters ! ");
+                                displayErrorDialog("Invalid login parameters ! ");
                             }
 
-                            else if (objects.isEmpty() ){
-                                displayErrorDialog(" User not found ");
-                            }
-
-                            else {
-                                displayErrorDialog(e.getMessage());
-                            }
                         }
                     });
                 }
@@ -114,17 +102,10 @@ public class Login extends CredentialsBaseActivity {
     }
 
     public void displayErrorDialog(String errorMessage) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(Login.this);
-        builder.setMessage("Login failed: " + errorMessage);
-        builder.setTitle("Error! ");
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
-        AlertDialog dialog = builder.create();
-        dialog.show();
+
+        FlatUIDialog errorDialog = new FlatUIDialog(Login.this, errorMessage);
+        errorDialog.show();
+
     }
 
 }

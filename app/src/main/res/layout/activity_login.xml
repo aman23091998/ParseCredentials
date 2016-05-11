@@ -28,6 +28,7 @@
         android:imeOptions="actionNext"
         android:paddingLeft="10dp"
         android:singleLine="true"
+        android:drawableRight="@drawable/flat_user_username"
         app:fl_fieldStyle="fl_box"/>
 
     <com.cengalabs.flatui.views.FlatEditText
@@ -41,6 +42,7 @@
         android:hint="@string/input_password"
         android:inputType="textPassword"
         android:paddingLeft="10dp"
+        android:drawableRight="@drawable/flat_lock_password"
         app:fl_fieldStyle="fl_box"/>
 
 
@@ -49,10 +51,10 @@
         style="@android:style/MediaButton"
         android:layout_width="80dp"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
         android:layout_marginTop="25dp"
         android:background="@color/colorPrimary"
         android:enabled="true"
-        android:layout_marginBottom="20dp"
         android:text="@string/login_button"
         android:textColor="#FFFFFF"/>
 

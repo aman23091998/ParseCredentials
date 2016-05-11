@@ -10,4 +10,6 @@
     <string name="input_confirm_password">Confirm Password</string>
     <string name="input_name">Name</string>
     <string name="input_username">Username</string>
+    <string name="dialog_error_placeholder">Error Message</string>
+    <string name="dialog_dismiss_positive_ok">OK</string>
 </resources>
