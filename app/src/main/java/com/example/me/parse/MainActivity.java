@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.cengalabs.flatui.FlatUI;
 import com.parse.Parse;
+import com.parse.ParseFacebookUtils;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -34,7 +35,9 @@ public class MainActivity extends AppCompatActivity {
 
 
     protected void initialiseParse() {
-        Parse.initialize(this, PARSE_APPLICATION_ID, PARSE_CLIENT_ID);
+        Parse.initialize(MainActivity.this, PARSE_APPLICATION_ID, PARSE_CLIENT_ID);
+        ParseFacebookUtils.initialize(MainActivity.this);
+
 
         /*Parse.initialize(new Parse.Configuration.Builder(this)
                 .applicationId(PARSE_APPLICATION_ID)

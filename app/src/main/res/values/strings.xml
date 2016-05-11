@@ -12,4 +12,5 @@
     <string name="input_username">Username</string>
     <string name="dialog_error_placeholder">Error Message</string>
     <string name="dialog_dismiss_positive_ok">OK</string>
+    <string name="facebook_app_id">1725940584314538</string>
 </resources>

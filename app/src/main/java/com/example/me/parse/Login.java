@@ -20,6 +20,8 @@ public class Login extends CredentialsBaseActivity {
 
     private FlatEditText nameWrapper, passwordWrapper;
 
+
+    private Button loginButton ;
     private final static String LOG_TAG = Login.class.getSimpleName();
 
     @Override
@@ -27,9 +29,14 @@ public class Login extends CredentialsBaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        if(ParseUser.getCurrentUser() != null){
+            startPostLoginActivity();
+            return;
+        }
+
         nameWrapper = (FlatEditText) findViewById(R.id.username);
         passwordWrapper = (FlatEditText) findViewById(R.id.password);
-        Button loginButton = (Button) findViewById(R.id.loginButton);
+        loginButton = (Button) findViewById(R.id.loginButton);
 
 
         assert loginButton != null;
@@ -58,7 +65,11 @@ public class Login extends CredentialsBaseActivity {
 
         String username = nameWrapper.getText().toString();
         String password = passwordWrapper.getText().toString();
-        signIn(username, password);
+        if(!(username.length() > 0) ) nameWrapper.setError("Field can't be empty");
+        if(!(password.length() > 0) ) passwordWrapper.setError("Field can't be empty");
+        if ( username.length() >0 && password.length() > 0)
+                 signIn(username, password);
+
 
     }
 
@@ -76,7 +87,6 @@ public class Login extends CredentialsBaseActivity {
                     query.findInBackground(new FindCallback<ParseUser>() {
                         @Override
                         public void done(List<ParseUser> objects, ParseException e) {
-                            Log.d(LOG_TAG, "Clicked :|");
                             if (!objects.isEmpty() && e == null) {
                                 ParseUser temp = objects.get(0);
                                 String usernameFromServer = temp.getUsername();
