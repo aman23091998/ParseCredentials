@@ -21,7 +21,6 @@ public class Login extends CredentialsBaseActivity {
     private FlatEditText nameWrapper, passwordWrapper;
 
 
-    private Button loginButton ;
     private final static String LOG_TAG = Login.class.getSimpleName();
 
     @Override
@@ -29,15 +28,17 @@ public class Login extends CredentialsBaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        if(ParseUser.getCurrentUser() != null){
-            startPostLoginActivity();
+
+        if (ParseUser.getCurrentUser() != null) {
+            if (ParseUser.getCurrentUser().getUsername().length() < 16)
+                startPostLoginActivity();
+            else ParseUser.logOutInBackground();
             return;
         }
 
         nameWrapper = (FlatEditText) findViewById(R.id.username);
         passwordWrapper = (FlatEditText) findViewById(R.id.password);
-        loginButton = (Button) findViewById(R.id.loginButton);
-
+        Button loginButton = (Button) findViewById(R.id.loginButton);
 
         assert loginButton != null;
         loginButton.setOnClickListener(new View.OnClickListener() {
@@ -65,10 +66,10 @@ public class Login extends CredentialsBaseActivity {
 
         String username = nameWrapper.getText().toString();
         String password = passwordWrapper.getText().toString();
-        if(!(username.length() > 0) ) nameWrapper.setError("Field can't be empty");
-        if(!(password.length() > 0) ) passwordWrapper.setError("Field can't be empty");
-        if ( username.length() >0 && password.length() > 0)
-                 signIn(username, password);
+        if (!(username.length() > 0)) nameWrapper.setError("Field can't be empty");
+        if (!(password.length() > 0)) passwordWrapper.setError("Field can't be empty");
+        if (username.length() > 0 && password.length() > 0)
+            signIn(username, password);
 
 
     }
