@@ -13,4 +13,6 @@
     <string name="dialog_error_placeholder">Error Message</string>
     <string name="dialog_dismiss_positive_ok">OK</string>
     <string name="facebook_app_id">1725940584314538</string>
+    <string name="register">REGISTER</string>
+    <string name="sign_up_with_fb">Sign up using facebook</string>
 </resources>

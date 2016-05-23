@@ -1,110 +1,125 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              android:id="@+id/register_page"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:layout_gravity="center_vertical"
-              android:gravity="center"
-              android:orientation="vertical">
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/register_page"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical">
 
-    <com.cengalabs.flatui.views.FlatTextView
-        android:id="@+id/register_header"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="30dp"
-        android:text="@string/register_here_header"
-        android:textSize="30sp"
-        app:fl_textColor="fl_main"/>
-
-
-    <com.cengalabs.flatui.views.FlatEditText
-        android:id="@+id/name_register"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="10dp"
-        android:hint="@string/input_name"
-        android:imeOptions="actionNext"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:singleLine="true"
-        app:fl_fieldStyle="fl_box"
-        />
+        android:gravity="center"
+        android:orientation="vertical"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp">
+
+        <com.cengalabs.flatui.views.FlatTextView
+            android:id="@+id/register_header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="30dp"
+            android:focusable="false"
+            android:text="@string/register_here_header"
+            android:textSize="30sp"
+            app:fl_textColor="fl_main"/>
 
 
-    <com.cengalabs.flatui.views.FlatEditText
-        android:id="@+id/email_register"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="10dp"
-        android:hint="@string/input_email"
-        android:imeOptions="actionNext"
-        android:inputType="textWebEmailAddress"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:singleLine="true"
-        app:fl_fieldStyle="fl_box"/>
-
-    <com.cengalabs.flatui.views.FlatEditText
-        android:id="@+id/username_register"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="10dp"
-        android:hint="@string/input_username"
-        android:inputType="text"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        app:fl_fieldStyle="fl_box"/>
-
-    <com.cengalabs.flatui.views.FlatEditText
-        android:id="@+id/password_register"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="10dp"
-        android:hint="@string/input_password"
-        android:inputType="textPassword"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        app:fl_fieldStyle="fl_box"/>
+        <com.cengalabs.flatui.views.FlatEditText
+            android:id="@+id/name_register"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="10dp"
+            android:hint="@string/input_name"
+            android:imeOptions="actionNext"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:singleLine="true"
+            app:fl_fieldStyle="fl_box"
+            />
 
 
-    <com.cengalabs.flatui.views.FlatEditText
-        android:id="@+id/confirm_password_register"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="10dp"
-        android:hint="@string/input_confirm_password"
-        android:inputType="textPassword"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        app:fl_fieldStyle="fl_box"/>
+        <com.cengalabs.flatui.views.FlatEditText
+            android:id="@+id/email_register"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="10dp"
+            android:hint="@string/input_email"
+            android:imeOptions="actionNext"
+            android:inputType="textWebEmailAddress"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:singleLine="true"
+            app:fl_fieldStyle="fl_box"/>
+
+        <com.cengalabs.flatui.views.FlatEditText
+            android:id="@+id/username_register"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="10dp"
+            android:hint="@string/input_username"
+            android:inputType="text"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            app:fl_fieldStyle="fl_box"/>
+
+        <com.cengalabs.flatui.views.FlatEditText
+            android:id="@+id/password_register"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="10dp"
+            android:hint="@string/input_password"
+            android:inputType="textPassword"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            app:fl_fieldStyle="fl_box"/>
 
 
-    <com.cengalabs.flatui.views.FlatButton
-        android:id="@+id/registerButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:enabled="true"
-        android:padding="5dp"
-        android:text="REGISTER"
-        android:textColor="#FFFFFF"/>
+        <com.cengalabs.flatui.views.FlatEditText
+            android:id="@+id/confirm_password_register"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="10dp"
+            android:hint="@string/input_confirm_password"
+            android:inputType="textPassword"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            app:fl_fieldStyle="fl_box"/>
 
-    <ImageView
-        android:id="@+id/fbSignup"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:clickable="true"
-        android:src="@mipmap/facebooksignup"
-        />
-</LinearLayout>
+
+        <com.cengalabs.flatui.views.FlatButton
+            android:id="@+id/registerButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:enabled="true"
+            android:padding="5dp"
+            android:text="@string/register"
+            android:textColor="#FFFFFF"/>
+
+        <ImageView
+            android:id="@+id/fbSignup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:clickable="true"
+            android:contentDescription="@string/sign_up_with_fb"
+            android:src="@mipmap/facebooksignup"/>
+
+        <com.twitter.sdk.android.core.identity.TwitterLoginButton
+            android:id="@+id/twitter_login_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            />
+    </LinearLayout>
+</ScrollView>

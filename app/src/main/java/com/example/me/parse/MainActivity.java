@@ -7,8 +7,16 @@ import android.support.v7.app.AppCompatActivity;
 import com.cengalabs.flatui.FlatUI;
 import com.parse.Parse;
 import com.parse.ParseFacebookUtils;
+import com.twitter.sdk.android.Twitter;
+import com.twitter.sdk.android.core.TwitterAuthConfig;
+import io.fabric.sdk.android.Fabric;
 
 public class MainActivity extends AppCompatActivity {
+
+    // Note: Your consumer key and secret should be obfuscated in your source code before shipping.
+    private static final String TWITTER_KEY = "0R2WQBBxoDHVryvU6cLPNaW9I";
+    private static final String TWITTER_SECRET = "MkhM27qez9Ikd32snMFoxPo6eqVtjWyCcPqtUBEV06k9GMk0e0";
+
 
     private final static String PARSE_APPLICATION_ID = "uEJ7QPPwHtCLVEFqEeb2Ur5x9YfCpdjxL9yXxIkT";
     private final static String PARSE_SERVER = "TBA";
@@ -18,6 +26,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        TwitterAuthConfig authConfig = new TwitterAuthConfig(TWITTER_KEY, TWITTER_SECRET);
+        Fabric.with(this, new Twitter(authConfig));
         setContentView(R.layout.activity_main);
 
         FlatUI.initDefaultValues(this);

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 
 import com.cengalabs.flatui.views.FlatEditText;
@@ -39,6 +40,8 @@ public class Login extends CredentialsBaseActivity {
         nameWrapper = (FlatEditText) findViewById(R.id.username);
         passwordWrapper = (FlatEditText) findViewById(R.id.password);
         Button loginButton = (Button) findViewById(R.id.loginButton);
+
+        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
         assert loginButton != null;
         loginButton.setOnClickListener(new View.OnClickListener() {

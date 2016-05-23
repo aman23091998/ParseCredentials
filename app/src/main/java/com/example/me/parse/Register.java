@@ -4,7 +4,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.cengalabs.flatui.views.FlatButton;
 import com.cengalabs.flatui.views.FlatEditText;
@@ -16,9 +18,18 @@ import com.facebook.appevents.AppEventsLogger;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseFacebookUtils;
+import com.parse.ParseTwitterUtils;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 import com.parse.SignUpCallback;
+import com.twitter.sdk.android.Twitter;
+import com.twitter.sdk.android.core.Callback;
+import com.twitter.sdk.android.core.Result;
+import com.twitter.sdk.android.core.TwitterException;
+import com.twitter.sdk.android.core.TwitterSession;
+import com.twitter.sdk.android.core.identity.TwitterLoginButton;
+import com.twitter.sdk.android.core.models.User;
+import com.twitter.sdk.android.core.services.AccountService;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -32,6 +43,16 @@ public class Register extends CredentialsBaseActivity {
 
     private FlatEditText emailWrapper, passwordWrapper, passwordConfirmWrapper, nameWrapper, usernameWrapper;
 
+    private boolean linkTwitter = false;
+
+    private String FACEBOOK_APP_ID = "1725940584314538"; //"getResources().getString(R.string.facebook_app_id);
+    private String TWITTER_CONSUMER_KEY = "0R2WQBBxoDHVryvU6cLPNaW9I";
+    private String TWITTER_CONSUMER_SECRET = "MkhM27qez9Ikd32snMFoxPo6eqVtjWyCcPqtUBEV06k9GMk0e0";
+
+    private TwitterLoginButton loginButton;
+
+    private boolean fbLogin = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,7 +62,10 @@ public class Register extends CredentialsBaseActivity {
         getSupportActionBar().setHomeButtonEnabled(true);
 
         FacebookSdk.sdkInitialize(getApplicationContext());
-        AppEventsLogger.activateApp(getApplication(), getResources().getString(R.string.facebook_app_id));
+        AppEventsLogger.activateApp(getApplication(), FACEBOOK_APP_ID);
+
+        ParseTwitterUtils.initialize(TWITTER_CONSUMER_KEY, TWITTER_CONSUMER_SECRET);
+
 
         if (ParseUser.getCurrentUser() != null) {
             if (ParseUser.getCurrentUser().getUsername().length() < 16)
@@ -55,6 +79,8 @@ public class Register extends CredentialsBaseActivity {
         passwordConfirmWrapper = (FlatEditText) findViewById(R.id.confirm_password_register);
         nameWrapper = (FlatEditText) findViewById(R.id.name_register);
         usernameWrapper = (FlatEditText) findViewById(R.id.username_register);
+
+        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
         FlatButton registerButton = (FlatButton) findViewById(R.id.registerButton);
         assert registerButton != null;
@@ -71,6 +97,7 @@ public class Register extends CredentialsBaseActivity {
         FBSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                fbLogin = true;
                 List<String> permissions = Arrays.asList("email", "public_profile");
 
                 ParseFacebookUtils.logInWithReadPermissionsInBackground(Register.this, permissions, new LogInCallback() {
@@ -92,6 +119,40 @@ public class Register extends CredentialsBaseActivity {
                 });
             }
         });
+
+        loginButton = (TwitterLoginButton) findViewById(R.id.twitter_login_button);
+        loginButton.setCallback(new Callback<TwitterSession>() {
+            @Override
+            public void success(Result<TwitterSession> result) {
+
+
+                String Username = result.data.getUserName();
+                Toast.makeText(Register.this, Username, Toast.LENGTH_LONG).show();
+                AccountService accountService = Twitter.getApiClient(result.data).getAccountService();
+                accountService.verifyCredentials(true, true, new Callback<User>() {
+                    @Override
+                    public void success(Result<User> result) {
+                        nameWrapper.setText(result.data.name);
+                        emailWrapper.setText(result.data.email);
+                        usernameWrapper.setText(result.data.screenName);
+                        linkTwitter = true;
+                        displayErrorDialog("Please enter the details to complete registrations!");
+                    }
+
+                    @Override
+                    public void failure(TwitterException exception) {
+                        Log.d("TwitterKit", "Login with Twitter failure", exception);
+                    }
+                });
+
+            }
+
+            @Override
+            public void failure(TwitterException exception) {
+                Log.d("TwitterKit", "Login with Twitter failure", exception);
+            }
+        });
+
     }
 
     public void getFBData() {
@@ -143,7 +204,8 @@ public class Register extends CredentialsBaseActivity {
         if (name.length() == 0) nameWrapper.setError("Field can't be left Empty ");
         if (username.length() == 0) usernameWrapper.setError("Field can't be left Empty ");
 
-        if (username.length() > 15) usernameWrapper.setError("Must be less than 15 characters");
+        if (username.length() > 15)
+            usernameWrapper.setError("Must be less than 15 characters");
 
 
         if (validateEmail(email) && validatePassword(password) && confirmPasswords(password, confirmPassword) && name.length() > 0 && username.length() > 0) {
@@ -159,7 +221,7 @@ public class Register extends CredentialsBaseActivity {
     public void signUp(final String name, final String password, final String email, final String username) {
         final ParseUser currentUser = ParseUser.getCurrentUser();
         if (currentUser == null) {
-            ParseUser user = new ParseUser();
+            final ParseUser user = new ParseUser();
             user.setUsername(username);
             user.setPassword(password);
             user.setEmail(email);
@@ -168,8 +230,29 @@ public class Register extends CredentialsBaseActivity {
                                         @Override
                                         public void done(ParseException e) {
                                             if (e == null) {
-                                                Log.d(LOG_TAG, "user: " + username + "<" + email + ">" + "registered");
-                                                startPostLoginActivity();
+                                                if (linkTwitter) {
+                                                    if (!ParseTwitterUtils.isLinked(user)) {
+                                                        ParseTwitterUtils.link(user, Register.this, new SaveCallback() {
+                                                            @Override
+                                                            public void done(ParseException ex) {
+                                                                if (ParseTwitterUtils.isLinked(user)) {
+                                                                    Log.d("MyApp", "Woohoo, user logged in with Twitter!");
+                                                                }
+
+                                                                if (ex != null)
+                                                                    Log.d(LOG_TAG, "Error Linking Twitter" + ex.getMessage());
+                                                                Log.d(LOG_TAG, "user: " + username + "<" + email + ">" + "registered");
+                                                                startPostLoginActivity();
+                                                            }
+                                                        });
+                                                    }
+                                                    linkTwitter = false;
+
+                                                } else {
+                                                    Log.d(LOG_TAG, "user: " + username + "<" + email + ">" + "registered");
+                                                    startPostLoginActivity();
+                                                }
+
                                             } else {
                                                 Log.e(LOG_TAG, "SignUpFailed " + e.getMessage());
                                                 displayErrorDialog(e.getMessage());
@@ -188,7 +271,8 @@ public class Register extends CredentialsBaseActivity {
                     if (e == null) {
                         Log.d(LOG_TAG, currentUser.get("name") + "signed up");
                     } else {
-                        Log.e(LOG_TAG, e.getMessage());
+                        Log.e(LOG_TAG, "SignUpFailed " + e.getMessage());
+                        displayErrorDialog(e.getMessage());
                     }
                 }
             });
@@ -202,85 +286,14 @@ public class Register extends CredentialsBaseActivity {
 
     }
 
-    @Override
+
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        ParseFacebookUtils.onActivityResult(requestCode, resultCode, data);
+        // Make sure that the loginButton hears the result from any
+        // Activity that it triggered.
+        if (fbLogin) {
+            ParseFacebookUtils.onActivityResult(requestCode, resultCode, data);
+            fbLogin = false;
+        } else loginButton.onActivityResult(requestCode, resultCode, data);
     }
 }
-/*    @Override
-    public void onBackPressed() {
-        final ParseUser currentUser = ParseUser.getCurrentUser();
-        if (currentUser != null) {
-            FlatUIDialog registerNotComplete = new FlatUIDialog
-                    (Register.this, "Registration not complete", "Cancel Registration", new FlatUIDialog.negativeButtonClick() {
-                        @Override
-                        public void onNegativeClick() {
-
-                            if (currentUser.getUsername().length() >= 20) {
-                                ParseUser.logOutInBackground(new LogOutCallback() {
-                                    @Override
-                                    public void done(ParseException e) {
-                                        if (e == null)
-                                            Log.d(LOG_TAG, "Logged off, registration not complete");
-                                    }
-                                });
-                            }
-                            Register.super.onBackPressed();
-                        }
-                    });
-            registerNotComplete.show();
-        } else Register.super.onBackPressed();
-
-    }
-
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                final ParseUser currentUser = ParseUser.getCurrentUser();
-                if (currentUser != null) {
-                    FlatUIDialog registerNotComplete = new FlatUIDialog
-                            (Register.this, "Registration not complete", "Cancel Registration", new FlatUIDialog.negativeButtonClick() {
-                                @Override
-                                public void onNegativeClick() {
-
-                                    if (currentUser.getUsername().length() >= 20) {
-                                        ParseUser.logOutInBackground(new LogOutCallback() {
-                                            @Override
-                                            public void done(ParseException e) {
-                                                if (e == null)
-                                                    Log.d(LOG_TAG, "Logged off, registration not complete");
-                                            }
-                                        });
-                                    }
-                                    Register.super.onBackPressed();
-                                }
-                            });
-                    registerNotComplete.show();
-                } else Register.super.onBackPressed();
-                break;
-        }
-        return true;
-    }
-
-    @Override
-    protected void onDestroy() {
-
-        ParseUser currentUser = ParseUser.getCurrentUser();
-        if (currentUser != null) {
-            if (currentUser.getUsername().length() >= 20) {
-                ParseUser.logOutInBackground(new LogOutCallback() {
-                    @Override
-                    public void done(ParseException e) {
-                        if (e == null)
-                            Log.d(LOG_TAG, "Logged off, registration not complete");
-                    }
-                });
-            }
-        }
-        super.onDestroy();
-    }*/
-

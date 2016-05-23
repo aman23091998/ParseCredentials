@@ -6,7 +6,6 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
     <application
-        android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
@@ -24,18 +23,21 @@
             </intent-filter>
         </activity>
         <activity android:name=".Register">
-            <meta-data android:name="android.support.PARENT_ACTIVITY"
-                       android:value="com.example.me.parse.Login"/>
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.me.parse.Login"/>
         </activity>
         <activity
             android:name="com.facebook.FacebookActivity"
-            android:configChanges=
-                "keyboard|keyboardHidden|screenLayout|screenSize|orientation"
             android:label="@string/app_name"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
 
         <activity android:name=".Login"/>
         <activity android:name=".PostLoginActivity"/>
+
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="dcb32a972d25ccdbf36137d68a8ec39a3a4946bb"/>
     </application>
 
 </manifest>
