@@ -30,6 +30,7 @@
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
             android:layout_marginTop="10dp"
+            android:drawableEnd="@drawable/flat_user_username"
             android:drawableRight="@drawable/flat_user_username"
             android:fontFamily="helvetica"
             android:hint="@string/input_email_username"
@@ -46,6 +47,7 @@
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
             android:layout_marginTop="10dp"
+            android:drawableEnd="@drawable/flat_lock_password"
             android:drawableRight="@drawable/flat_lock_password"
             android:fontFamily="helvetica"
             android:hint="@string/input_password"
@@ -66,13 +68,33 @@
             android:text="@string/login_button"
             android:textColor="#FFFFFF"/>
 
+        <ImageView
+            android:id="@+id/fbSignin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:clickable="true"
+            android:contentDescription="@string/sign_in_with_fb"
+            android:src="@mipmap/facebooksignup"/>
+
+        <ImageView
+            android:src="@mipmap/twitter_login"
+            android:id="@+id/twitter_login_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:clickable="true"
+            android:contentDescription="@string/sign_in_with_twitter"
+            />
+
         <com.cengalabs.flatui.views.FlatTextView
             android:id="@+id/register_here"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
+            android:layout_marginEnd="20dp"
+            android:layout_marginRight="20dp"
             android:layout_marginTop="20dp"
-            android:paddingRight="20dp"
             android:text="@string/register_now"
             app:fl_textColor="fl_main"
             />

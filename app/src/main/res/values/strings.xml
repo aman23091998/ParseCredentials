@@ -15,4 +15,6 @@
     <string name="facebook_app_id">1725940584314538</string>
     <string name="register">REGISTER</string>
     <string name="sign_up_with_fb">Sign up using facebook</string>
+    <string name="sign_in_with_fb">Sign in with Facebook</string>
+    <string name="sign_in_with_twitter">Sign in with Twitter</string>
 </resources>

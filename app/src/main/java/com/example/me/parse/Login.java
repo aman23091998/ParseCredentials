@@ -6,13 +6,16 @@ import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageView;
 
 import com.cengalabs.flatui.views.FlatEditText;
 import com.cengalabs.flatui.views.FlatTextView;
 import com.parse.FindCallback;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
+import com.parse.ParseFacebookUtils;
 import com.parse.ParseQuery;
+import com.parse.ParseTwitterUtils;
 import com.parse.ParseUser;
 
 import java.util.List;
@@ -21,7 +24,6 @@ public class Login extends CredentialsBaseActivity {
 
     private FlatEditText nameWrapper, passwordWrapper;
 
-
     private final static String LOG_TAG = Login.class.getSimpleName();
 
     @Override
@@ -29,6 +31,7 @@ public class Login extends CredentialsBaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        initialiseParseLogin();
 
         if (ParseUser.getCurrentUser() != null) {
             if (ParseUser.getCurrentUser().getUsername().length() < 16)
@@ -60,6 +63,46 @@ public class Login extends CredentialsBaseActivity {
             public void onClick(View v) {
                 Intent register = new Intent(Login.this, Register.class);
                 Login.this.startActivity(register);
+            }
+        });
+
+        ImageView twitterLoginButton = (ImageView) findViewById(R.id.twitter_login_button);
+        assert twitterLoginButton != null;
+        twitterLoginButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(LOG_TAG, "Working on Twitter");
+                ParseTwitterUtils.logIn(Login.this, new LogInCallback() {
+                    @Override
+                    public void done(ParseUser user, ParseException e) {
+                        if ( user != null ) {
+                            if (validateUser(user)) {
+                                startPostLoginActivity();
+                                finish();
+                            }
+                        } else if( e != null) Log.d(LOG_TAG, e.getMessage());
+                    }
+                });
+            }
+        });
+
+        ImageView fbLogin = (ImageView) findViewById(R.id.fbSignin);
+        assert fbLogin != null;
+        fbLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ParseFacebookUtils.logInWithReadPermissionsInBackground(Login.this, null, new LogInCallback() {
+                    @Override
+                    public void done(ParseUser user, ParseException e) {
+                        Log.d(LOG_TAG, "Working on FB");
+                        if (e == null) {
+                            if (validateUser(user)) {
+                                startPostLoginActivity();
+                                finish();
+                            }
+                        } else Log.d(LOG_TAG, e.getMessage());
+                    }
+                });
             }
         });
     }
@@ -119,7 +162,27 @@ public class Login extends CredentialsBaseActivity {
 
         FlatUIDialog errorDialog = new FlatUIDialog(Login.this, errorMessage);
         errorDialog.show();
-
     }
 
+    public boolean validateUser(ParseUser user) {
+
+        if (user.getUsername().length() <= 15) return true;
+        else {
+            ParseUser.logOutInBackground();
+            FlatUIDialog notRegistered = new FlatUIDialog(this, "User is not registered or account hasn't been linked.", "Register", new FlatUIDialog.negativeButtonClick() {
+                @Override
+                public void onNegativeClick() {
+                    Intent intent = new Intent(Login.this, Register.class);
+                    startActivity(intent);
+                }
+            });
+            notRegistered.show();
+            return false;
+        }
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+            ParseFacebookUtils.onActivityResult(requestCode, resultCode, data);
+    }
 }

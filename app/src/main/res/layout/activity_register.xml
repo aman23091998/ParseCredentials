@@ -116,7 +116,7 @@
             android:src="@mipmap/facebooksignup"/>
 
         <com.twitter.sdk.android.core.identity.TwitterLoginButton
-            android:id="@+id/twitter_login_button"
+            android:id="@+id/twitter_signup_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"

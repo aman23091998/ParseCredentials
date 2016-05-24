@@ -11,10 +11,8 @@ import android.widget.Toast;
 import com.cengalabs.flatui.views.FlatButton;
 import com.cengalabs.flatui.views.FlatEditText;
 import com.facebook.AccessToken;
-import com.facebook.FacebookSdk;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
-import com.facebook.appevents.AppEventsLogger;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseFacebookUtils;
@@ -45,9 +43,6 @@ public class Register extends CredentialsBaseActivity {
 
     private boolean linkTwitter = false;
 
-    private String FACEBOOK_APP_ID = "1725940584314538"; //"getResources().getString(R.string.facebook_app_id);
-    private String TWITTER_CONSUMER_KEY = "0R2WQBBxoDHVryvU6cLPNaW9I";
-    private String TWITTER_CONSUMER_SECRET = "MkhM27qez9Ikd32snMFoxPo6eqVtjWyCcPqtUBEV06k9GMk0e0";
 
     private TwitterLoginButton loginButton;
 
@@ -61,11 +56,7 @@ public class Register extends CredentialsBaseActivity {
         assert getSupportActionBar() != null;
         getSupportActionBar().setHomeButtonEnabled(true);
 
-        FacebookSdk.sdkInitialize(getApplicationContext());
-        AppEventsLogger.activateApp(getApplication(), FACEBOOK_APP_ID);
-
-        ParseTwitterUtils.initialize(TWITTER_CONSUMER_KEY, TWITTER_CONSUMER_SECRET);
-
+        initialiseParseLogin();
 
         if (ParseUser.getCurrentUser() != null) {
             if (ParseUser.getCurrentUser().getUsername().length() < 16)
@@ -104,7 +95,7 @@ public class Register extends CredentialsBaseActivity {
                     @Override
                     public void done(ParseUser user, ParseException err) {
                         if (user == null) {
-                            Log.d("MyApp", "Uh oh. The user cancelled the Facebook login.");
+                            Log.d(LOG_TAG, "Uh oh. The user cancelled the Facebook login.");
                         } else {
                             Log.d(LOG_TAG, user.getUsername());
                             if (user.getUsername().length() > 15) {
@@ -120,7 +111,7 @@ public class Register extends CredentialsBaseActivity {
             }
         });
 
-        loginButton = (TwitterLoginButton) findViewById(R.id.twitter_login_button);
+        loginButton = (TwitterLoginButton) findViewById(R.id.twitter_signup_button);
         loginButton.setCallback(new Callback<TwitterSession>() {
             @Override
             public void success(Result<TwitterSession> result) {
@@ -141,7 +132,7 @@ public class Register extends CredentialsBaseActivity {
 
                     @Override
                     public void failure(TwitterException exception) {
-                        Log.d("TwitterKit", "Login with Twitter failure", exception);
+                        Log.d(LOG_TAG, "Login with Twitter failure", exception);
                     }
                 });
 
@@ -149,7 +140,7 @@ public class Register extends CredentialsBaseActivity {
 
             @Override
             public void failure(TwitterException exception) {
-                Log.d("TwitterKit", "Login with Twitter failure", exception);
+                Log.d(LOG_TAG, "Login with Twitter failure", exception);
             }
         });
 
@@ -236,7 +227,7 @@ public class Register extends CredentialsBaseActivity {
                                                             @Override
                                                             public void done(ParseException ex) {
                                                                 if (ParseTwitterUtils.isLinked(user)) {
-                                                                    Log.d("MyApp", "Woohoo, user logged in with Twitter!");
+                                                                    Log.d(LOG_TAG, "Woohoo, user logged in with Twitter!");
                                                                 }
 
                                                                 if (ex != null)
@@ -270,6 +261,8 @@ public class Register extends CredentialsBaseActivity {
                 public void done(ParseException e) {
                     if (e == null) {
                         Log.d(LOG_TAG, currentUser.get("name") + "signed up");
+                        startPostLoginActivity();
+                        finish();
                     } else {
                         Log.e(LOG_TAG, "SignUpFailed " + e.getMessage());
                         displayErrorDialog(e.getMessage());
@@ -289,8 +282,6 @@ public class Register extends CredentialsBaseActivity {
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        // Make sure that the loginButton hears the result from any
-        // Activity that it triggered.
         if (fbLogin) {
             ParseFacebookUtils.onActivityResult(requestCode, resultCode, data);
             fbLogin = false;
